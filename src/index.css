@@ -41,3 +41,6 @@ form, .addresses {
 .addresses .selected > pre {
   outline: 1px dashed #333;
 }
+.compareOverlay table {
+  table-layout: fixed;
+}

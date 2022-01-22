@@ -1,5 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import Modal from 'react-bootstrap/Modal'
+import Button from 'react-bootstrap/Button'
+import ReactDiffViewer from "react-diff-viewer";
 
 import { fetchAddresses, fetchEvents, fetchSelectedEventDetails } from './thunks'
 import { eventGuid, canSelectEvents, undeletedAddresses } from './selectors'
@@ -63,6 +66,34 @@ Event = connect((state, ownProps) => {
   }
 })(Event)
 
+const handleModalShow = (dispatch, show) => (e) => {
+  dispatch({
+    type: actions.SHOW_MODAL,
+    payload: show
+  })
+}
+
+let Overlay = ({ dispatch, showModal, comparisonJson }) => {
+  return <Modal show={showModal} size="xl" className='compareOverlay'>
+          <Modal.Header closeButton onClick={handleModalShow(dispatch, false)}>
+            <Modal.Title>Address Comparison</Modal.Title>
+          </Modal.Header>
+
+          <Modal.Body>
+          {comparisonJson && comparisonJson.length
+            ? <div>
+                <ReactDiffViewer oldValue={JSON.stringify(comparisonJson[0])} newValue={JSON.stringify(comparisonJson[1])} splitView={true} />
+              </div>
+            : <div>No comparison data found!</div>
+          }
+          </Modal.Body>
+
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleModalShow(dispatch, false)}>Close</Button>
+          </Modal.Footer>
+        </Modal>
+}
+Overlay = connect(state => state)(Overlay)
 
 const handleCompareClick = (dispatch) => (e) => {
   /*
@@ -74,8 +105,11 @@ const handleCompareClick = (dispatch) => (e) => {
    * Find it in thunks.js, lines 81-107,
    * and referenced in the comment below on line 78.
    */
-
-  // dispatch(fetchSelectedEventDetails())
+  dispatch({
+    type: actions.SHOW_MODAL,
+    payload: true
+  })
+  dispatch(fetchSelectedEventDetails())
 }
 
 let EventList = ({dispatch, canCompare, events}) => {
@@ -118,7 +152,8 @@ Address = connect((state, ownProps) => {
 
 
 //--> App wrapper
-let App = ({ addresses, events, userIds, selectedUserId, selectedAddressId, comparingEvents, error} ) => {
+let App = ({ addresses, events, userIds, selectedUserId, selectedAddressId, comparingEvents, error, showModal, comparisonJson} ) => {
+
   return <>
     {error ? <p className="error">{error}</p> : ''}
     {userIds && userIds.length ?
@@ -142,6 +177,7 @@ let App = ({ addresses, events, userIds, selectedUserId, selectedAddressId, comp
         : <p>{selectedAddressId ? 'No events found.' : 'Select an address to see events'}</p>
       }
     </div>
+    <Overlay showModal={showModal} comparisonJson={comparisonJson}/>
   </>
 }
 App = connect(state => {

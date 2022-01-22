@@ -93,6 +93,10 @@ const reducer = (state, action) => {
       return Object.assign({}, state, {
         error : action.payload
       })
+    case actions.SHOW_MODAL:
+      return Object.assign({}, state, {
+        showModal : action.payload
+      })
     default:
       return state
   }
@@ -106,7 +110,8 @@ const initialState = {
   userIds: [],
   selectedUserId: null,
   selectedAddressId: null,
-  selectedEvents: {}
+  selectedEvents: {},
+  showModal: false
 }
 
 const store = createStore(reducer, initialState, applyMiddleware(thunk))

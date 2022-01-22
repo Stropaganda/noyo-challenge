@@ -15,7 +15,8 @@ const actions = {
   FETCH_EVENTS_ERROR: 'fetch_events_error',
   TOGGLE_EVENT_SELECTION: 'toggle_event_selection',
   EVENT_DETAILS_SUCCESS: 'event_details_success',
-  EVENT_DETAILS_ERROR: 'event_details_error'
+  EVENT_DETAILS_ERROR: 'event_details_error',
+  SHOW_MODAL: 'show_modal'
 }
 
 
@@ -105,6 +106,11 @@ const reducer = (state, action) => {
         ...state,
         error : action.payload
       }
+    case actions.SHOW_MODAL:
+      return {
+        ...state,
+        showModal : action.payload
+      }
     default:
       return state
   }
@@ -119,7 +125,8 @@ const initialState = {
   selectedUserId: null,
   selectedAddressId: null,
   selectedEvents: {},
-  error: null
+  error: null,
+  showModal: false
 }
 
 const store = createStore(reducer, initialState, applyMiddleware(thunk))

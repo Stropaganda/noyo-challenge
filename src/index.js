@@ -6,6 +6,7 @@ import { store } from './redux-store';
 import { fetchUserIds } from './thunks'
 import { App } from './components.jsx'
 
+import 'bootstrap/dist/css/bootstrap.min.css';
 import "./index.css";
 
 
