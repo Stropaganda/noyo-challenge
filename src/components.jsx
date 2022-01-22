@@ -82,7 +82,7 @@ let Overlay = ({ dispatch, showModal, comparisonJson }) => {
           <Modal.Body>
           {comparisonJson && comparisonJson.length
             ? <div>
-                <ReactDiffViewer oldValue={JSON.stringify(comparisonJson[0])} newValue={JSON.stringify(comparisonJson[1])} splitView={true} />
+                <ReactDiffViewer oldValue={JSON.stringify(comparisonJson[0])} newValue={JSON.stringify(comparisonJson[1])} splitView={true} compareMethod="diffWords"/>
               </div>
             : <div>No comparison data found!</div>
           }
